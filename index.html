@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Amit Das Portfolio</title>
+<meta name="description" content="Amit Das: MSc Data Science and AI student in Sheffield. Machine learning for security and healthcare, with evaluation that holds up.">
+<meta property="og:title" content="Amit Das | Data Science and AI">
+<meta property="og:description" content="Machine learning for security and healthcare data. MSc Data Science and AI, Sheffield Hallam University.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e1b33'/%3E%3Cpath d='M6 36h14l5-16 7 28 6-20 4 8h16' fill='none' stroke='%2300b8a9' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* Layout: sticky nav, hero with a drawn signal trace and facts strip, live evaluation demo, filterable project cards with expandable case notes, principles, timeline, skills, contact. */
+:root{
+  --bg:#f5f7fb; --surface:#ffffff; --ink:#0e1b33; --muted:#4d5d7a; --line:#d9e0ec;
+  --accent:#a85700; --accent-ink:#ffffff; --signal:#00786f; --chip:#e8eef8; --warn:#b3261e;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif;
+  --body:'Instrument Sans','Segoe UI',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0b1426; --surface:#121f38; --ink:#eef3fb; --muted:#9db0cf; --line:#233659;
+  --accent:#ffb03b; --accent-ink:#0b1426; --signal:#00b8a9; --chip:#1a2c4d; --warn:#ff8a80; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0b1426; --surface:#121f38; --ink:#eef3fb; --muted:#9db0cf; --line:#233659;
+  --accent:#ffb03b; --accent-ink:#0b1426; --signal:#00b8a9; --chip:#1a2c4d; --warn:#ff8a80; color-scheme:dark}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);line-height:1.1;margin:0;text-wrap:balance}
+h2{font-size:clamp(1.7rem,4vw,2.3rem);font-weight:700;letter-spacing:-.01em}
+p{margin:0}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:var(--signal)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:4px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--accent);color:var(--accent-ink);padding:8px 12px;border-radius:8px;z-index:50}
+.skip:focus{left:8px}
+
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--bg)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0}
+.brand{font-family:var(--display);font-weight:800;text-decoration:none;font-size:1.15rem}
+.links{display:flex;gap:4px;flex-wrap:wrap;align-items:center}
+.links a{font-size:.92rem;text-decoration:none;color:var(--muted);padding:6px 10px;border-radius:8px}
+.links a:hover{color:var(--ink);background:var(--chip)}
+.theme{font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:6px 10px;border-radius:8px;cursor:pointer}
+
+.hero{padding:72px 0 0;position:relative;overflow:hidden}
+.status-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:.78rem;border:1px solid var(--line);background:var(--surface);padding:6px 12px;border-radius:999px;color:var(--muted)}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--signal)}
+.hero h1{font-size:clamp(3rem,10vw,6.4rem);font-weight:800;letter-spacing:-.03em;margin:18px 0 18px}
+.hero .lead{max-width:30ch;font-size:clamp(1.2rem,2.8vw,1.65rem);line-height:1.35}
+.hero .sub{max-width:62ch;margin-top:16px;color:var(--muted)}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-block;text-decoration:none;font-weight:600;padding:12px 20px;border-radius:10px;border:1.5px solid var(--ink)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn:hover{transform:translateY(-1px)}
+.trace{display:block;width:100%;height:110px;margin-top:40px}
+.trace path{fill:none;stroke:var(--signal);stroke-width:2.5;stroke-dasharray:1800;stroke-dashoffset:1800;animation:draw 3.2s ease-out .2s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:0}
+.strip div{padding:18px 16px 18px 0}
+.strip b{display:block;font-family:var(--display);font-size:1.9rem;font-weight:800;letter-spacing:-.02em}
+.strip span{font-size:.88rem;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){.trace path{animation:none;stroke-dashoffset:0}html{scroll-behavior:auto}.btn:hover{transform:none}}
+
+section{padding:68px 0;border-top:1px solid var(--line)}
+.hero+main>section:first-child{border-top:0}
+.head{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;max-width:62ch}
+.head p.intro{color:var(--muted)}
+.about{display:grid;grid-template-columns:1.4fr 1fr;gap:40px}
+.about p+p{margin-top:14px}
+.facts{display:grid;align-content:start;margin:0;padding:0;list-style:none;border-top:1px solid var(--line)}
+.facts li{display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid var(--line);font-size:.95rem}
+.facts span:first-child{color:var(--muted)}
+.facts span:last-child{text-align:right;font-weight:500}
+
+.lab{display:grid;grid-template-columns:1fr 1.1fr;gap:28px;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:28px}
+.lab h3{font-size:1.5rem;font-weight:700;margin-bottom:10px}
+.lab p{color:var(--muted)}
+.lab label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:.82rem;margin:18px 0 6px}
+.lab input[type=range]{width:100%;accent-color:var(--accent)}
+.rows{display:grid;gap:12px;align-content:start}
+.model{border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.model h4{margin:0 0 8px;font-family:var(--body);font-size:.95rem;font-weight:600}
+.m{display:grid;grid-template-columns:90px 1fr 56px;align-items:center;gap:10px;font-family:var(--mono);font-size:.78rem;margin-top:6px}
+.bar{height:10px;border-radius:6px;background:var(--chip);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--signal);width:0}
+.bar i.bad{background:var(--warn)}
+.m em{font-style:normal;text-align:right}
+.verdict{font-size:.92rem;color:var(--ink);margin-top:2px}
+
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.chipbtn{font-family:var(--mono);font-size:.8rem;padding:7px 14px;border-radius:999px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.chipbtn[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card[hidden]{display:none}
+.card .top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.status{font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--chip);color:var(--muted)}
+.status.live{color:var(--signal)}
+.status.plan{color:var(--accent)}
+.year{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.card h3{font-size:1.3rem;font-weight:700}
+.card p{color:var(--muted);font-size:.97rem}
+.card details{border-top:1px dashed var(--line);padding-top:10px}
+.card summary{cursor:pointer;font-weight:600;font-size:.93rem}
+.card details ul{margin:10px 0 0;padding-left:1.1em;color:var(--muted);font-size:.93rem}
+.card details li+li{margin-top:6px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:auto}
+.tags span{font-family:var(--mono);font-size:.74rem;padding:3px 8px;border-radius:6px;background:var(--chip);color:var(--ink)}
+.card a.repo{font-weight:600;font-size:.95rem;text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--accent)}
+
+.principles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border-top:1px solid var(--line)}
+.pr{padding:20px 24px 20px 0;border-bottom:1px solid var(--line)}
+.pr h3{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+.pr p{color:var(--muted);font-size:.97rem}
+
+.timeline{display:grid}
+.job{display:grid;grid-template-columns:170px 1fr;gap:24px;padding:22px 0;border-bottom:1px solid var(--line)}
+.job:first-child{padding-top:0}
+.job .when{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+.job h3{font-size:1.15rem;font-weight:700}
+.job .org{color:var(--muted);font-size:.95rem;margin-top:2px}
+.job ul{margin:10px 0 0;padding-left:1.1em;color:var(--muted);font-size:.97rem}
+.job li+li{margin-top:5px}
+
+.skills{display:grid;border-top:1px solid var(--line)}
+.skill{display:grid;grid-template-columns:200px 1fr;gap:24px;padding:14px 0;border-bottom:1px solid var(--line)}
+.skill h3{font-size:1rem;font-weight:600;font-family:var(--body)}
+.skill p{color:var(--muted);font-size:.97rem}
+
+.contact .big{font-family:var(--display);font-weight:800;font-size:clamp(1.8rem,5vw,3rem);line-height:1.1;max-width:20ch;text-wrap:balance;margin-top:10px}
+footer{padding:28px 0 40px;color:var(--muted);font-size:.88rem;border-top:1px solid var(--line)}
+footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:820px){
+  body{font-size:16px}
+  .links a:not(.keep){display:none}
+  .hero{padding:44px 0 0}
+  .about,.grid,.lab,.principles{grid-template-columns:1fr}
+  .strip{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .job,.skill{grid-template-columns:1fr;gap:6px}
+  section{padding:48px 0}
+  .lab{padding:20px}
+  .m{grid-template-columns:78px 1fr 50px}
+}
+</style>
+
+</head>
+<body>
+<a class="skip" href="#about">Skip to content</a>
+<nav aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="#top">Amit Das</a>
+    <div class="links">
+      <a href="#about">About</a><a href="#lab">Evaluation</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#skills">Skills</a>
+      <a class="keep" href="#contact">Contact</a>
+      <button class="theme" id="themeBtn" type="button" aria-label="Switch colour theme">Theme</button>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <span class="status-pill"><span class="dot"></span>Open to entry-level roles in the UK</span>
+    <h1>Amit Das</h1>
+    <p class="lead">I build machine-learning systems, then try to break them before anyone else does.</p>
+    <p class="sub">MSc Data Science and AI student in Sheffield. My work sits where models meet high-stakes data: attacks on vehicle networks, patient vital signs, privacy in sensor data. I care about evaluation that holds up, with time-ordered splits, leakage checks and honest baselines.</p>
+    <div class="cta">
+      <a class="btn primary" href="#projects">See my projects</a>
+      <a class="btn" href="https://github.com/AmitDas856" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/amit-das-724b7243b" target="_blank" rel="noopener">LinkedIn</a>
+    </div>
+    <svg class="trace" viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 62 L180 62 L210 62 L225 34 L240 90 L255 16 L272 76 L290 62 L520 62 L548 62 L562 46 L576 78 L590 62 L860 62 L890 62 L905 30 L920 94 L936 10 L954 78 L972 62 L1200 62"/>
+    </svg>
+    <div class="strip">
+      <div><b>6</b><span>projects, from CAN-bus security to stroke risk</span></div>
+      <div><b>4</b><span>public repositories on GitHub</span></div>
+      <div><b>5</b><span>biometric traits fused in one CNN system</span></div>
+      <div><b>Jan 2027</b><span>MSc completes at Sheffield Hallam</span></div>
+    </div>
+  </div>
+</header>
+
+<main id="main">
+<section id="about"><div class="wrap">
+  <div class="head"><p class="eyebrow">About</p><h2>Studying in Sheffield, building for the UK market</h2></div>
+  <div class="about">
+    <div>
+      <p>I'm doing an MSc in Data Science and Artificial Intelligence at Sheffield Hallam University (January 2026 to January 2027), after a B.Tech in Computer Science and Engineering (Data Science) in Hyderabad.</p>
+      <p>On my MSc group project, AutoSPECTRA, I built the evaluation harness for a deep-learning system that spots attacks on a vehicle's CAN bus. As team lead of my final-year project, I planned the work, split modules across the team and reviewed everyone's code.</p>
+      <p>I'm looking for an entry-level role in data science, machine learning or software development in the UK, ideally in healthcare, security or applied AI.</p>
+    </div>
+    <ul class="facts">
+      <li><span>Based in</span><span>Sheffield, UK</span></li>
+      <li><span>Studying</span><span>MSc Data Science &amp; AI</span></li>
+      <li><span>Core stack</span><span>Python, R, SQL</span></li>
+      <li><span>Interests</span><span>Healthcare, security, evaluation</span></li>
+      <li><span>Now</span><span>Planning my dissertation</span></li>
+    </ul>
+  </div>
+</div></section>
+
+<section id="lab"><div class="wrap">
+  <div class="head"><p class="eyebrow">Try it</p><h2>Why 99% accuracy can be a bad result</h2>
+    <p class="intro">Attacks are rare in real traffic, so a model can look excellent while catching nothing. Move the slider to see it on 10,000 messages.</p></div>
+  <div class="lab">
+    <div>
+      <h3>Rare attacks, misleading scores</h3>
+      <p>The first model always answers "normal". The second is a more useful detector that catches 90% of attacks and raises a false alarm on 2% of normal messages. Compare their accuracy with recall and F1.</p>
+      <label for="rate"><span>Attacks in the data</span><b id="rateOut">1.0%</b></label>
+      <input id="rate" type="range" min="0.1" max="10" step="0.1" value="1">
+    </div>
+    <div class="rows" aria-live="polite">
+      <div class="model"><h4>Always predicts "normal"</h4>
+        <div class="m"><span>Accuracy</span><div class="bar"><i id="a1"></i></div><em id="a1t"></em></div>
+        <div class="m"><span>Recall</span><div class="bar"><i id="r1" class="bad"></i></div><em id="r1t"></em></div>
+        <p class="verdict" id="v1"></p></div>
+      <div class="model"><h4>Detector: 90% recall, 2% false alarms</h4>
+        <div class="m"><span>Accuracy</span><div class="bar"><i id="a2"></i></div><em id="a2t"></em></div>
+        <div class="m"><span>Recall</span><div class="bar"><i id="r2"></i></div><em id="r2t"></em></div>
+        <div class="m"><span>Precision</span><div class="bar"><i id="p2"></i></div><em id="p2t"></em></div>
+        <div class="m"><span>F1</span><div class="bar"><i id="f2"></i></div><em id="f2t"></em></div>
+        <p class="verdict" id="v2"></p></div>
+    </div>
+  </div>
+</div></section>
+
+<section id="projects"><div class="wrap">
+  <div class="head"><p class="eyebrow">Selected work</p><h2>Projects</h2></div>
+  <div class="filters" role="group" aria-label="Filter projects">
+    <button class="chipbtn" type="button" data-f="all" aria-pressed="true">All</button>
+    <button class="chipbtn" type="button" data-f="ml" aria-pressed="false">ML &amp; AI</button>
+    <button class="chipbtn" type="button" data-f="security" aria-pressed="false">Security</button>
+    <button class="chipbtn" type="button" data-f="health" aria-pressed="false">Healthcare</button>
+    <button class="chipbtn" type="button" data-f="web" aria-pressed="false">Web</button>
+  </div>
+  <div class="grid" id="grid">
+    <article class="card" data-c="ml security">
+      <div class="top"><span class="status live">Public repo</span><span class="year">2026 · MSc group project</span></div>
+      <h3>AutoSPECTRA: CAN bus intrusion detection</h3>
+      <p>Deep learning to detect DoS, fuzzing, gear and RPM spoofing attacks on a vehicle CAN bus, using the public HCRL Car-Hacking dataset, with automated incident reporting.</p>
+      <details><summary>My part and how it was tested</summary><ul>
+        <li>I designed and own the evaluation harness.</li>
+        <li>Time-ordered train/test splits with automated leakage checks, because neighbouring CAN frames look alike and random splits can leak.</li>
+        <li>Reported per-class precision, recall, F1, ROC-AUC, false-positive rate and detection latency.</li>
+        <li>Baseline, CNN and sequence models compared on identical splits, with window-size ablations.</li></ul></details>
+      <div class="tags"><span>Python</span><span>Deep learning</span><span>CAN bus</span></div>
+      <a class="repo" href="https://github.com/AmitDas856/AutoSPECTRA-Project" target="_blank" rel="noopener">View on GitHub</a>
+    </article>
+    <article class="card" data-c="ml health">
+      <div class="top"><span class="status plan">Planned</span><span class="year">2026 · MSc dissertation</span></div>
+      <h3>Agentic AI for IoT-enabled healthcare</h3>
+      <p>An agentic workflow for patient monitoring that checks the quality of incoming vital-sign data, calls a triage prediction model and flags uncertain cases for clinical review. At the planning stage now.</p>
+      <details><summary>The plan</summary><ul>
+        <li>Compare Logistic Regression and Random Forest on heart rate, blood pressure, temperature and oxygen saturation.</li>
+        <li>Stress-test the workflow with simulated IoT readings: missing data, wrong readings and system errors.</li>
+        <li>Assess privacy, security and reliability risks of using agentic AI in healthcare.</li></ul></details>
+      <div class="tags"><span>Agentic AI</span><span>Scikit-learn</span><span>Python</span></div>
+    </article>
+    <article class="card" data-c="ml security">
+      <div class="top"><span class="status live">Public repo</span><span class="year">2025 · Final-year project, team lead</span></div>
+      <h3>Multimodal biometric recognition</h3>
+      <p>A desktop authentication app that fuses face, fingerprint, iris, ear and palm features, with Gabor-filter feature extraction and a CNN classifier. Reported accuracy above 95%.</p>
+      <details><summary>Role and approach</summary><ul>
+        <li>I led the team: scoped the timeline, split modules, ran the Git workflow and reviewed every member's code.</li>
+        <li>Built the feature-extraction and model-fusion pipeline.</li>
+        <li>Presented progress reviews and the final demo to the faculty panel.</li></ul></details>
+      <div class="tags"><span>Python</span><span>Keras</span><span>OpenCV</span><span>Tkinter</span></div>
+      <a class="repo" href="https://github.com/AmitDas856/multimodal-biometric-recognition" target="_blank" rel="noopener">View on GitHub</a>
+    </article>
+    <article class="card" data-c="security">
+      <div class="top"><span class="status live">Public repo</span><span class="year">2025 · Team project</span></div>
+      <h3>PPQC: privacy-preserving quality control</h3>
+      <p>A simulation of a mobile crowd-sensing network. Participants report encrypted locations, a quality check scores each report and rewards participants, and results are recorded through a Solidity smart contract on a local Ethereum chain.</p>
+      <details><summary>Limits, stated plainly</summary><ul>
+        <li>The encryption is a small teaching demo with fixed keys. It is not production-grade, and the README says so.</li>
+        <li>The contract address belongs to a local test chain.</li></ul></details>
+      <div class="tags"><span>Python</span><span>Solidity</span><span>web3.py</span><span>Encryption</span></div>
+      <a class="repo" href="https://github.com/AmitDas856/ppqc-crowdsensing" target="_blank" rel="noopener">View on GitHub</a>
+    </article>
+    <article class="card" data-c="health ml">
+      <div class="top"><span class="status">Private repos</span><span class="year">2026 · Coursework</span></div>
+      <h3>Patient health analytics: stroke risk</h3>
+      <p>An end-to-end analysis in R of how hypertension, glucose and BMI relate to stroke, with tidyverse cleaning, ggplot2 charts and a written report. A matching Python app answers 12 analytical queries with hand-written statistics.</p>
+      <div class="tags"><span>R</span><span>tidyverse</span><span>ggplot2</span><span>Python</span></div>
+      <p>Coursework, so the code is private. Available on request.</p>
+    </article>
+    <article class="card" data-c="web">
+      <div class="top"><span class="status live">Public repo</span><span class="year">2025</span></div>
+      <h3>Portfolio site, React edition</h3>
+      <p>My earlier portfolio, built with React 19, Vite and Tailwind CSS. This page is the plain HTML rewrite: no build step, fast to load, works on a phone.</p>
+      <div class="tags"><span>React</span><span>Vite</span><span>Tailwind CSS</span></div>
+      <a class="repo" href="https://github.com/AmitDas856/portfolio-website" target="_blank" rel="noopener">View on GitHub</a>
+    </article>
+  </div>
+</div></section>
+
+<section id="principles"><div class="wrap">
+  <div class="head"><p class="eyebrow">How I work</p><h2>Four habits I bring to every model</h2></div>
+  <div class="principles">
+    <div class="pr"><h3>Split by time, not by luck</h3><p>When data arrives in order, I test on later data than I train on, so the score reflects what happens after deployment.</p></div>
+    <div class="pr"><h3>Check for leakage first</h3><p>I automate the checks that catch duplicate and overlapping records before trusting any number.</p></div>
+    <div class="pr"><h3>Start with a baseline</h3><p>A deep model has to beat a simple one on the same split to earn its complexity.</p></div>
+    <div class="pr"><h3>Say what it can't do</h3><p>Each README lists its limits. If a result needs a caveat, the caveat goes next to the result.</p></div>
+  </div>
+</div></section>
+
+<section id="experience"><div class="wrap">
+  <div class="head"><p class="eyebrow">Experience &amp; education</p><h2>Where I've worked and studied</h2></div>
+  <div class="timeline">
+    <div class="job"><div class="when">Jan 2026 to Jan 2027</div><div>
+      <h3>MSc Data Science and Artificial Intelligence</h3><p class="org">Sheffield Hallam University, Sheffield</p>
+      <ul><li>Machine learning, deep learning, data analytics in R and SAS, and a group project on vehicle network security.</li></ul></div></div>
+    <div class="job"><div class="when">2024 to 2025</div><div>
+      <h3>Team Lead, Final Year Major Project</h3><p class="org">Malla Reddy College of Engineering</p>
+      <ul><li>Led the team end to end on a multimodal biometric recognition system built on CNNs.</li>
+          <li>Scoped the timeline, split modules across the team, ran the Git and GitHub workflow and reviewed every member's code.</li>
+          <li>Built the feature-extraction and model-fusion pipeline, taking combined-model accuracy above 95%.</li>
+          <li>Presented progress reviews and the final demo to the faculty panel.</li></ul></div></div>
+    <div class="job"><div class="when">2024</div><div>
+      <h3>Data Science &amp; Machine Learning Intern</h3><p class="org">YBI Foundation, remote</p>
+      <ul><li>Data preprocessing, model building and evaluation with Python, Pandas and Scikit-learn.</li></ul></div></div>
+    <div class="job"><div class="when">2024</div><div>
+      <h3>Developer &amp; Technology Job Simulation</h3><p class="org">Accenture via Forage, remote</p>
+      <ul><li>Simulated software engagement covering SDLC, DevOps and technology consulting.</li></ul></div></div>
+    <div class="job"><div class="when">2021 to 2025</div><div>
+      <h3>B.Tech Computer Science &amp; Engineering (Data Science)</h3><p class="org">Malla Reddy College of Engineering, JNTU(H), Hyderabad · Grade A</p>
+      <ul><li>Data structures, database systems, AI, object-oriented programming and software engineering.</li></ul></div></div>
+  </div>
+</div></section>
+
+<section id="skills"><div class="wrap">
+  <div class="head"><p class="eyebrow">Toolbox</p><h2>Skills</h2></div>
+  <div class="skills">
+    <div class="skill"><h3>Languages</h3><p>Python, R, SAS, SQL, Java, C, C++</p></div>
+    <div class="skill"><h3>Machine learning &amp; AI</h3><p>Scikit-learn, TensorFlow, Keras, CNNs, NumPy, Pandas, agentic AI, model evaluation (precision, recall, F1, ROC-AUC)</p></div>
+    <div class="skill"><h3>APIs &amp; LLMs</h3><p>REST APIs, LLM APIs, chatbots, retrieval-augmented generation, AI coding assistants</p></div>
+    <div class="skill"><h3>Web</h3><p>HTML, CSS, JavaScript, React, Tailwind CSS, HTTP</p></div>
+    <div class="skill"><h3>Data analysis</h3><p>tidyverse, dplyr, ggplot2, Power BI, Excel</p></div>
+    <div class="skill"><h3>Developer tools</h3><p>Git, GitHub, VS Code, Django, databases, SDLC, object-oriented design</p></div>
+  </div>
+</div></section>
+
+<section id="contact" class="contact"><div class="wrap">
+  <p class="eyebrow">Contact</p>
+  <p class="big">Hiring for an entry-level data or ML role? Let's talk.</p>
+  <div class="cta">
+    <a class="btn primary" href="https://www.linkedin.com/in/amit-das-724b7243b" target="_blank" rel="noopener">Message me on LinkedIn</a>
+    <a class="btn" href="https://github.com/AmitDas856" target="_blank" rel="noopener">github.com/AmitDas856</a>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><span>Amit Das · Sheffield, UK</span><span>One HTML file, no frameworks.</span></div></footer>
+
+<script>
+(function(){
+  var root=document.documentElement,btn=document.getElementById('themeBtn');
+  function cur(){var t=root.getAttribute('data-theme');if(t)return t;return matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'}
+  try{var s=localStorage.getItem('theme');if(s)root.setAttribute('data-theme',s)}catch(e){}
+  btn.addEventListener('click',function(){var n=cur()==='dark'?'light':'dark';root.setAttribute('data-theme',n);try{localStorage.setItem('theme',n)}catch(e){}});
+
+  var chips=document.querySelectorAll('.chipbtn'),cards=document.querySelectorAll('#grid .card');
+  chips.forEach(function(c){c.addEventListener('click',function(){
+    chips.forEach(function(x){x.setAttribute('aria-pressed',x===c?'true':'false')});
+    var f=c.getAttribute('data-f');
+    cards.forEach(function(k){k.hidden=!(f==='all'||k.getAttribute('data-c').split(' ').indexOf(f)>-1)});
+  })});
+
+  var rate=document.getElementById('rate');
+  function pct(x){return (x*100).toFixed(1)+'%'}
+  function put(id,v){document.getElementById(id).style.width=(v*100)+'%';document.getElementById(id+'t').textContent=pct(v)}
+  function calc(){
+    var p=parseFloat(rate.value)/100,N=10000,att=N*p,norm=N-att;
+    document.getElementById('rateOut').textContent=(p*100).toFixed(1)+'%';
+    put('a1',norm/N);put('r1',0);
+    var tp=att*0.9,fn=att-tp,fp=norm*0.02,tn=norm-fp;
+    var acc=(tp+tn)/N,rec=tp/att,prec=tp/(tp+fp),f1=2*prec*rec/(prec+rec);
+    put('a2',acc);put('r2',rec);put('p2',prec);put('f2',f1);
+    document.getElementById('v1').textContent='Scores '+pct(norm/N)+' accuracy and catches none of the '+Math.round(att)+' attacks.';
+    document.getElementById('v2').textContent='Lower accuracy ('+pct(acc)+'), but it catches '+Math.round(tp)+' of '+Math.round(att)+' attacks. Precision is '+pct(prec)+', so F1 shows the real trade-off.';
+  }
+  rate.addEventListener('input',calc);calc();
+})();
+</script>
+</body>
+</html>
