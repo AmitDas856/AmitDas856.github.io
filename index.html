@@ -12,6 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* Layout: sticky nav, hero with a drawn signal trace and facts strip, live evaluation demo, filterable project cards with expandable case notes, principles, timeline, skills, contact. */
+:root:not(.intro-skip){--intro:1.9s}
 :root{
   --bg:#f5f7fb; --surface:#ffffff; --ink:#0e1b33; --muted:#4d5d7a; --line:#d9e0ec;
   --accent:#a85700; --accent-ink:#ffffff; --signal:#00786f; --chip:#e8eef8; --warn:#b3261e;
@@ -160,12 +161,12 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(14,27,51,.45)}
 .links a.active::after{content:"";position:absolute;left:10px;right:10px;bottom:2px;height:2px;border-radius:2px;background:var(--signal)}
 
 /* hero name: letters rise in one orchestrated sequence */
-.hero h1 .ch{display:inline-block;transform:translateY(105%) rotate(6deg);opacity:0;animation:rise .9s cubic-bezier(.2,.75,.2,1) forwards;animation-delay:calc(var(--i)*55ms + .1s)}
+.hero h1 .ch{display:inline-block;transform:translateY(105%) rotate(6deg);opacity:0;animation:rise .9s cubic-bezier(.2,.75,.2,1) forwards;animation-delay:calc(var(--intro,0s) + var(--i)*55ms + .1s)}
 .hero h1 .ln{display:inline-block;overflow:hidden;padding-bottom:.08em;vertical-align:bottom}
 .hero h1 .sp{display:inline-block;width:.28em}
 @keyframes rise{to{transform:none;opacity:1}}
 .hero .seq{opacity:0;transform:translateY(14px);animation:fadeUp .8s cubic-bezier(.2,.75,.2,1) forwards}
-.hero .seq.d1{animation-delay:.55s}.hero .seq.d2{animation-delay:.7s}.hero .seq.d3{animation-delay:.85s}.hero .seq.d4{animation-delay:1s}
+.hero .seq.d1{animation-delay:calc(var(--intro,0s) + .55s)}.hero .seq.d2{animation-delay:calc(var(--intro,0s) + .7s)}.hero .seq.d3{animation-delay:calc(var(--intro,0s) + .85s)}.hero .seq.d4{animation-delay:calc(var(--intro,0s) + 1s)}
 @keyframes fadeUp{to{opacity:1;transform:none}}
 .status-pill .dot{box-shadow:0 0 0 0 var(--signal);animation:ping 2.4s ease-out infinite}
 @keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--signal) 60%,transparent)}80%,100%{box-shadow:0 0 0 10px transparent}}
@@ -218,10 +219,71 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(14,27,51,.45)}
   .status-pill .dot,.card.filtering{animation:none}
   .btn::after{display:none}.bar i{transition:none}
 }
+
+/* ---- Premium layer: dark signal-room hero, oversized name, intro, marquee */
+html,body{overflow-x:clip}
+.hero{--hb:#06101f;--hi:#eef3fb;--hm:#9db0cf;--hl:#1c2d4d;
+  margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding:clamp(48px,9vh,96px) max(16px,calc(50vw - 540px)) 0;
+  background:var(--hb);color:var(--hi);isolation:isolate;min-height:calc(100svh - 58px);display:flex;flex-direction:column}
+.hero>.wrap{width:100%;flex:1;display:flex;flex-direction:column}
+.hero .lead{color:var(--hi)}
+.hero .sub{color:var(--hm)}
+.hero .status-pill{background:rgba(255,255,255,.04);border-color:var(--hl);color:var(--hm)}
+.hero .btn{border-color:var(--hi);color:var(--hi)}
+.hero .btn.primary{border-color:var(--accent);color:var(--accent-ink)}
+.hero .btn:not(.primary):hover{background:var(--hi);color:var(--hb)}
+.hero h1{font-size:clamp(4.2rem,15.5vw,12.5rem);line-height:.86;letter-spacing:-.045em;margin:22px 0 26px;white-space:nowrap}
+.hero::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+  background:radial-gradient(600px circle at var(--gx,70%) var(--gy,30%),rgba(0,184,169,.16),transparent 60%),
+             radial-gradient(500px circle at 15% 90%,rgba(255,176,59,.08),transparent 60%)}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(var(--hl) 1px,transparent 1px),linear-gradient(90deg,var(--hl) 1px,transparent 1px);
+  background-size:56px 56px;mask-image:radial-gradient(ellipse at 60% 40%,#000 10%,transparent 70%)}
+.hero .scope{margin-top:auto;padding-top:36px}
+.hero .scope canvas{height:170px}
+.hero .scope figcaption{color:var(--hm)}
+.hero .strip{border-color:var(--hl)}
+.hero .strip span{color:var(--hm)}
+.hero .strip b{color:var(--hi)}
+
+
+nav{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);padding-inline:max(16px,calc(50vw - 540px))}
+nav.on-hero{background:#06101f;border-bottom-color:#1c2d4d}
+nav.on-hero .brand{color:#eef3fb}
+nav.on-hero .links a{color:#9db0cf}
+nav.on-hero .links a:hover,nav.on-hero .links a.active{color:#eef3fb;background:rgba(255,255,255,.06)}
+nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
+.hero .status-pill{align-self:flex-start}
+/* intro: a short calibration count, shown once per visit */
+#intro{position:fixed;inset:0;z-index:100;background:#06101f;color:#eef3fb;display:grid;place-items:center;
+  animation:introOut .6s cubic-bezier(.7,0,.2,1) 2.6s forwards}
+#intro .box{width:min(320px,70vw)}
+#intro .num{font-family:var(--display);font-weight:800;font-size:clamp(3rem,12vw,5.5rem);letter-spacing:-.04em;line-height:1}
+#intro .lbl{font-size:.9rem;color:#9db0cf;margin-top:6px}
+#intro .bar{height:2px;background:#1c2d4d;margin-top:18px;border-radius:2px;overflow:hidden}
+#intro .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#00b8a9,#ffb03b)}
+#intro.done{animation:introOut .6s cubic-bezier(.7,0,.2,1) forwards}
+@keyframes introOut{to{clip-path:inset(0 0 100% 0);visibility:hidden}}
+#intro{clip-path:inset(0 0 0 0)}
+.intro-skip #intro{display:none}
+
+/* marquee of tools between the hero and the page */
+.marquee{margin-left:calc(50% - 50vw);margin-right:calc(50% - 50vw);border-bottom:1px solid var(--line);overflow:hidden;background:var(--surface)}
+.marquee .track{display:flex;width:max-content;animation:slide 38s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.marquee span{font-family:var(--display);font-weight:700;font-size:clamp(1.2rem,2.6vw,1.9rem);letter-spacing:-.01em;padding:18px 0;white-space:nowrap;display:flex;align-items:center}
+.marquee span::after{content:"";display:inline-block;width:34px;height:14px;margin:0 22px;
+  background:no-repeat center/contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 34 14'%3E%3Cpath d='M0 7h9l3-6 4 12 3-9 2 3h13' fill='none' stroke='%2300b8a9' stroke-width='2' stroke-linejoin='round'/%3E%3C/svg%3E")}
+@keyframes slide{to{transform:translateX(-50%)}}
+
+@media (max-width:820px){.hero{min-height:auto;padding-top:40px}.hero h1{white-space:normal;font-size:clamp(3.6rem,19vw,6rem)}.hero .scope canvas{height:130px}}
+@media (prefers-reduced-motion:reduce){#intro{display:none}.marquee .track{animation:none;flex-wrap:wrap;width:auto}}
 </style>
 
 </head>
 <body>
+<script>try{if(sessionStorage.getItem('introSeen')||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.classList.add('intro-skip');sessionStorage.setItem('introSeen','1')}catch(e){}</script>
+<div id="intro" aria-hidden="true"><div class="box"><div class="num" id="introNum">0</div><div class="lbl">Calibrating the signal</div><div class="bar"><i id="introBar"></i></div></div></div>
 <a class="skip" href="#about">Skip to content</a>
 <div class="progress" aria-hidden="true"><i id="prog"></i></div>
 <nav aria-label="Main">
@@ -258,6 +320,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(14,27,51,.45)}
     </div>
   </div>
 </header>
+<div class="marquee" aria-label="Tools I use: Python, R, SQL, TensorFlow, Keras, scikit-learn, LLM agents, React, TypeScript, Rust, Power BI, GitHub Actions"><div class="track" aria-hidden="true"><span>Python</span><span>R</span><span>SQL</span><span>TensorFlow</span><span>Keras</span><span>scikit-learn</span><span>LLM agents</span><span>React</span><span>TypeScript</span><span>Rust</span><span>Power BI</span><span>GitHub Actions</span><span>Python</span><span>R</span><span>SQL</span><span>TensorFlow</span><span>Keras</span><span>scikit-learn</span><span>LLM agents</span><span>React</span><span>TypeScript</span><span>Rust</span><span>Power BI</span><span>GitHub Actions</span></div></div>
 
 <main id="main">
 <section id="about"><div class="wrap">
@@ -497,6 +560,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(14,27,51,.45)}
     var max=root.scrollHeight-innerHeight,y=scrollY;
     prog.style.transform='scaleX('+(max>0?y/max:0)+')';
     nav.classList.toggle('scrolled',y>8);
+    var hb=document.querySelector('.hero');nav.classList.toggle('on-hero',!!hb&&hb.getBoundingClientRect().bottom>60);
     var cur=-1;targets.forEach(function(t,k){if(t&&t.getBoundingClientRect().top<innerHeight*0.35)cur=k});
     links.forEach(function(a,k){a.classList.toggle('active',k===cur)});
   }
@@ -519,7 +583,7 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(14,27,51,.45)}
     if(reduce)return;
     var t0=null;el.textContent='0'+suf;
     function step(t){if(!t0)t0=t;var p=Math.min((t-t0)/1400,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e)+suf;if(p<1)requestAnimationFrame(step)}
-    setTimeout(function(){requestAnimationFrame(step)},1100);
+    setTimeout(function(){requestAnimationFrame(step)},root.classList.contains('intro-skip')?1100:3000);
   });
 
   // card tilt + spotlight (pointer devices only)
@@ -546,11 +610,24 @@ nav.scrolled{box-shadow:0 10px 30px -18px rgba(14,27,51,.45)}
       k.classList.remove('filtering');void k.offsetWidth;k.style.animationDelay=(n*60)+'ms';k.classList.add('filtering')});
   })});
 
+
+  // intro counter (only when the intro is shown)
+  var intro=document.getElementById('intro');
+  if(intro&&!root.classList.contains('intro-skip')){
+    var n=document.getElementById('introNum'),bar=document.getElementById('introBar'),t1=null;
+    (function tick(ts){if(!t1)t1=ts;var p=Math.min((ts-t1)/1500,1),e=1-Math.pow(1-p,3);
+      n.textContent=Math.round(e*100);bar.style.width=(e*100)+'%';
+      if(p<1)requestAnimationFrame(tick);else setTimeout(function(){intro.classList.add('done')},150)})(performance.now());
+  }
+  // hero glow follows the pointer
+  var hero=document.querySelector('.hero');
+  if(hero&&!reduce&&matchMedia('(hover:hover)').matches){hero.addEventListener('pointermove',function(e){var r=hero.getBoundingClientRect();
+    hero.style.setProperty('--gx',((e.clientX-r.left)/r.width*100)+'%');hero.style.setProperty('--gy',((e.clientY-r.top)/r.height*100)+'%')})}
   // live oscilloscope: simulated CAN traffic scrolling left; amber bursts are
   // spoofed frames and a box marks where the detector flags them
   var cv=document.getElementById('scope');if(!cv)return;
   var ctx=cv.getContext('2d'),W=0,H=150,dpr=1,col={};
-  function colors(){var cs=getComputedStyle(root);col.n=cs.getPropertyValue('--signal').trim();col.a=cs.getPropertyValue('--accent').trim();col.l=cs.getPropertyValue('--line').trim();col.m=cs.getPropertyValue('--muted').trim()}
+  function colors(){col.n='#00b8a9';col.a='#ffb03b';col.l='#1c2d4d';col.m='#9db0cf'}
   function size(){dpr=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
   colors();size();addEventListener('resize',size);
   new MutationObserver(colors).observe(root,{attributes:true,attributeFilter:['data-theme']});
