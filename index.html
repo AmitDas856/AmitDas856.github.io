@@ -242,6 +242,18 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     <button class="chipbtn" type="button" data-f="web" aria-pressed="false">Web</button>
   </div>
   <div class="grid" id="grid">
+    <article class="card" data-c="ml web">
+      <div class="top"><span class="status live">Public repo</span><span class="year">2026 · Personal project</span></div>
+      <h3>FixAgent: an AI agent that fixes bugs</h3>
+      <p>Give it a repository and a bug report or GitHub issue. It explores the code, runs the tests, edits the source and hands back a patch or pull request. A fix only counts if the tests fail before and pass after. Works on Python, C++ and Rust code, with a React dashboard to watch it work.</p>
+      <details><summary>How it is built and tested</summary><ul>
+        <li>Agent loop, tools and LLM client in plain Python, talking to any OpenAI-style tool-calling endpoint.</li>
+        <li>Safety rules: works on a copy, test files are read-only, commands run from an allowlist with a timeout, and the model's own claim of success is ignored.</li>
+        <li>A fast code-search CLI in Rust and a React/TypeScript dashboard.</li>
+        <li>68 offline tests with a scripted model run in GitHub Actions. Not yet run with a real model or on a public benchmark.</li></ul></details>
+      <div class="tags"><span>Python</span><span>LLM agents</span><span>React</span><span>TypeScript</span><span>Rust</span></div>
+      <a class="repo" href="https://github.com/AmitDas856/fixagent" target="_blank" rel="noopener">View on GitHub</a>
+    </article>
     <article class="card" data-c="ml security">
       <div class="top"><span class="status live">Public repo</span><span class="year">2026 · MSc group project</span></div>
       <h3>AutoSPECTRA: CAN bus intrusion detection</h3>
@@ -339,12 +351,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 <section id="skills"><div class="wrap">
   <div class="head"><p class="eyebrow">Toolbox</p><h2>Skills</h2></div>
   <div class="skills">
-    <div class="skill"><h3>Languages</h3><p>Python, R, SAS, SQL, Java, C, C++</p></div>
+    <div class="skill"><h3>Languages</h3><p>Python, R, SAS, SQL, Java, C, C++, TypeScript, Rust</p></div>
     <div class="skill"><h3>Machine learning &amp; AI</h3><p>Scikit-learn, TensorFlow, Keras, CNNs, NumPy, Pandas, agentic AI, model evaluation (precision, recall, F1, ROC-AUC)</p></div>
-    <div class="skill"><h3>APIs &amp; LLMs</h3><p>REST APIs, LLM APIs, chatbots, retrieval-augmented generation, AI coding assistants</p></div>
+    <div class="skill"><h3>APIs &amp; LLMs</h3><p>REST APIs, LLM APIs and tool calling, AI agents, chatbots, retrieval-augmented generation, AI coding assistants</p></div>
     <div class="skill"><h3>Web</h3><p>HTML, CSS, JavaScript, React, Tailwind CSS, HTTP</p></div>
     <div class="skill"><h3>Data analysis</h3><p>tidyverse, dplyr, ggplot2, Power BI, Excel</p></div>
-    <div class="skill"><h3>Developer tools</h3><p>Git, GitHub, VS Code, Django, databases, SDLC, object-oriented design</p></div>
+    <div class="skill"><h3>Developer tools</h3><p>Git, GitHub, GitHub Actions, pytest, VS Code, Django, databases, SDLC, object-oriented design</p></div>
   </div>
 </div></section>
 
