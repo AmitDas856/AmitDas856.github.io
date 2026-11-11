@@ -149,11 +149,81 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
   .lab{padding:20px}
   .m{grid-template-columns:78px 1fr 50px}
 }
+
+/* ---- Motion layer ------------------------------------------------------ */
+.progress{position:fixed;top:0;left:0;right:0;height:3px;z-index:40;pointer-events:none}
+.progress i{display:block;height:100%;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--signal),var(--accent))}
+nav{transition:box-shadow .3s ease,background-color .3s ease}
+nav.scrolled{box-shadow:0 1px 0 var(--line),0 10px 30px -18px rgba(14,27,51,.45)}
+.links a{position:relative;transition:color .2s ease,background-color .2s ease}
+.links a.active{color:var(--ink)}
+.links a.active::after{content:"";position:absolute;left:10px;right:10px;bottom:2px;height:2px;border-radius:2px;background:var(--signal)}
+
+/* hero name: letters rise in one orchestrated sequence */
+.hero h1 .ch{display:inline-block;transform:translateY(105%) rotate(6deg);opacity:0;animation:rise .9s cubic-bezier(.2,.75,.2,1) forwards;animation-delay:calc(var(--i)*55ms + .1s)}
+.hero h1 .ln{display:inline-block;overflow:hidden;padding-bottom:.08em;vertical-align:bottom}
+.hero h1 .sp{display:inline-block;width:.28em}
+@keyframes rise{to{transform:none;opacity:1}}
+.hero .seq{opacity:0;transform:translateY(14px);animation:fadeUp .8s cubic-bezier(.2,.75,.2,1) forwards}
+.hero .seq.d1{animation-delay:.55s}.hero .seq.d2{animation-delay:.7s}.hero .seq.d3{animation-delay:.85s}.hero .seq.d4{animation-delay:1s}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.status-pill .dot{box-shadow:0 0 0 0 var(--signal);animation:ping 2.4s ease-out infinite}
+@keyframes ping{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--signal) 60%,transparent)}80%,100%{box-shadow:0 0 0 10px transparent}}
+
+/* live oscilloscope */
+.scope{margin:40px 0 0;position:relative}
+.scope canvas{display:block;width:100%;height:150px}
+.scope figcaption{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:.82rem;color:var(--muted);padding:8px 0 14px}
+.key{display:inline-block;width:18px;height:3px;border-radius:2px;margin-left:4px}
+.k-n{background:var(--signal)}.k-a{background:var(--accent);margin-left:12px}
+
+/* buttons: magnetic pull and a light sweep */
+.btn{position:relative;overflow:hidden;transition:transform .25s cubic-bezier(.2,.75,.2,1),background-color .2s ease,color .2s ease;will-change:transform}
+.btn::after{content:"";position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.35) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s ease}
+.btn:hover::after{transform:translateX(120%)}
+.btn:not(.primary):hover{background:var(--ink);color:var(--bg)}
+
+/* scroll reveals, staggered within a group */
+.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s cubic-bezier(.2,.75,.2,1),transform .8s cubic-bezier(.2,.75,.2,1);transition-delay:calc(var(--d,0)*80ms)}
+.reveal.in{opacity:1;transform:none}
+.head h2{background:linear-gradient(90deg,var(--ink) 0 50%,var(--muted) 50% 100%);background-size:200% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position 1.2s cubic-bezier(.2,.75,.2,1) .15s}
+.head.in h2{background-position:0 0}
+
+/* project cards: tilt toward the pointer with a moving spotlight */
+.grid{perspective:1200px}
+.card{position:relative;transform-style:preserve-3d;transition:transform .35s cubic-bezier(.2,.75,.2,1),border-color .3s ease,box-shadow .35s ease,opacity .8s cubic-bezier(.2,.75,.2,1)}
+.card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s ease;
+  background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),color-mix(in srgb,var(--signal) 16%,transparent),transparent 45%)}
+.card:hover{border-color:color-mix(in srgb,var(--signal) 55%,var(--line));box-shadow:0 24px 50px -30px rgba(14,27,51,.55)}
+.card:hover::before{opacity:1}
+.card.reveal{transform:translateY(26px)}
+.card.reveal.in{transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg))}
+.card.reveal.in:hover{transition-delay:0s}
+.card details[open] ul{animation:fadeUp .4s ease both}
+.card.filtering{animation:pop .45s cubic-bezier(.2,.75,.2,1) both}
+@keyframes pop{from{opacity:0;transform:scale(.96) translateY(10px)}to{opacity:1;transform:none}}
+
+/* lab bars ease to their new value */
+.bar i{transition:width .6s cubic-bezier(.2,.75,.2,1)}
+.lab{position:relative;overflow:hidden}
+
+/* skills rows sweep in */
+.skill{transition:background-color .25s ease,padding-left .25s ease}
+.skill:hover{background:var(--chip);padding-left:12px}
+.contact .big .w{display:inline-block}
+
+@media (prefers-reduced-motion:reduce){
+  .hero h1 .ch,.hero .seq,.reveal,.card.reveal{animation:none!important;opacity:1!important;transform:none!important;transition:none!important}
+  .head h2{background:none;color:var(--ink);-webkit-background-clip:border-box;background-clip:border-box}
+  .status-pill .dot,.card.filtering{animation:none}
+  .btn::after{display:none}.bar i{transition:none}
+}
 </style>
 
 </head>
 <body>
 <a class="skip" href="#about">Skip to content</a>
+<div class="progress" aria-hidden="true"><i id="prog"></i></div>
 <nav aria-label="Main">
   <div class="wrap">
     <a class="brand" href="#top">Amit Das</a>
@@ -167,22 +237,23 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 
 <header class="hero" id="top">
   <div class="wrap">
-    <span class="status-pill"><span class="dot"></span>Open to entry-level roles in the UK</span>
-    <h1>Amit Das</h1>
-    <p class="lead">I build machine-learning systems, then try to break them before anyone else does.</p>
-    <p class="sub">MSc Data Science and AI student in Sheffield. My work sits where models meet high-stakes data: attacks on vehicle networks, patient vital signs, privacy in sensor data. I care about evaluation that holds up, with time-ordered splits, leakage checks and honest baselines.</p>
-    <div class="cta">
-      <a class="btn primary" href="#projects">See my projects</a>
+    <span class="status-pill seq d1"><span class="dot"></span>Open to entry-level roles in the UK</span>
+    <h1 id="name" aria-label="Amit Das">Amit Das</h1>
+    <p class="lead seq d1">I build machine-learning systems, then try to break them before anyone else does.</p>
+    <p class="sub seq d2">MSc Data Science and AI student in Sheffield. My work sits where models meet high-stakes data: attacks on vehicle networks, patient vital signs, privacy in sensor data. I care about evaluation that holds up, with time-ordered splits, leakage checks and honest baselines.</p>
+    <div class="cta seq d3">
+      <a class="btn primary magnet" href="#projects">See my projects</a>
       <a class="btn" href="https://github.com/AmitDas856" target="_blank" rel="noopener">GitHub</a>
       <a class="btn" href="https://www.linkedin.com/in/amit-das-724b7243b" target="_blank" rel="noopener">LinkedIn</a>
     </div>
-    <svg class="trace" viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0 62 L180 62 L210 62 L225 34 L240 90 L255 16 L272 76 L290 62 L520 62 L548 62 L562 46 L576 78 L590 62 L860 62 L890 62 L905 30 L920 94 L936 10 L954 78 L972 62 L1200 62"/>
-    </svg>
-    <div class="strip">
-      <div><b>6</b><span>projects, from CAN-bus security to stroke risk</span></div>
-      <div><b>4</b><span>public repositories on GitHub</span></div>
-      <div><b>5</b><span>biometric traits fused in one CNN system</span></div>
+    <figure class="scope seq d4" aria-label="Animated, simulated CAN bus signal. Amber bursts are spoofed frames, which the detector box flags.">
+      <canvas id="scope" height="150"></canvas>
+      <figcaption><span class="key k-n"></span>Simulated CAN bus traffic <span class="key k-a"></span>Spoofed frames, flagged by the detector</figcaption>
+    </figure>
+    <div class="strip seq d4">
+      <div><b data-count="7">7</b><span>projects, from an AI bug-fixing agent to CAN-bus security</span></div>
+      <div><b data-count="7">7</b><span>code repositories, each tested on every push</span></div>
+      <div><b data-count="95" data-suffix="%+">95%+</b><span>accuracy fusing 5 biometric traits in one CNN</span></div>
       <div><b>Jan 2027</b><span>MSc completes at Sheffield Hallam</span></div>
     </div>
   </div>
@@ -339,9 +410,6 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     <div class="job"><div class="when">2024</div><div>
       <h3>Data Science &amp; Machine Learning Intern</h3><p class="org">YBI Foundation, remote</p>
       <ul><li>Data preprocessing, model building and evaluation with Python, Pandas and Scikit-learn.</li></ul></div></div>
-    <div class="job"><div class="when">2024</div><div>
-      <h3>Developer &amp; Technology Job Simulation</h3><p class="org">Accenture via Forage, remote</p>
-      <ul><li>Simulated software engagement covering SDLC, DevOps and technology consulting.</li></ul></div></div>
     <div class="job"><div class="when">2021 to 2025</div><div>
       <h3>B.Tech Computer Science &amp; Engineering (Data Science)</h3><p class="org">Malla Reddy College of Engineering, JNTU(H), Hyderabad · Grade A</p>
       <ul><li>Data structures, database systems, AI, object-oriented programming and software engineering.</li></ul></div></div>
@@ -370,7 +438,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
 </div></section>
 </main>
 
-<footer><div class="wrap"><span>Amit Das · Sheffield, UK</span><span>One HTML file, no frameworks.</span></div></footer>
+<footer><div class="wrap"><span>Amit Das, Sheffield, UK</span><span>One HTML file, no frameworks. The hero signal is drawn live on a canvas.</span></div></footer>
 
 <script>
 (function(){
@@ -400,6 +468,153 @@ footer .wrap{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
     document.getElementById('v2').textContent='Lower accuracy ('+pct(acc)+'), but it catches '+Math.round(tp)+' of '+Math.round(att)+' attacks. Precision is '+pct(prec)+', so F1 shows the real trade-off.';
   }
   rate.addEventListener('input',calc);calc();
+})();
+</script>
+<script>
+/* Motion layer: hero letters, live oscilloscope, counters, reveals, card tilt,
+   magnetic button, scroll progress, active nav. All of it is skipped when the
+   visitor asks for reduced motion. */
+(function(){
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root=document.documentElement;
+
+  // hero name, split into letters for the rise-in
+  var h=document.getElementById('name');
+  if(h&&!reduce){
+    var i=0,html='';
+    h.textContent.split(' ').forEach(function(word,wi){
+      if(wi)html+='<span class="sp"></span>';
+      html+='<span class="ln" aria-hidden="true">'+word.split('').map(function(c){return '<span class="ch" style="--i:'+(i++)+'">'+c+'</span>'}).join('')+'</span>';
+    });
+    h.innerHTML=html;
+  }
+
+  // scroll progress + nav shadow + active link
+  var prog=document.getElementById('prog'),nav=document.querySelector('nav');
+  var links=[].slice.call(document.querySelectorAll('.links a[href^="#"]'));
+  var targets=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function onScroll(){
+    var max=root.scrollHeight-innerHeight,y=scrollY;
+    prog.style.transform='scaleX('+(max>0?y/max:0)+')';
+    nav.classList.toggle('scrolled',y>8);
+    var cur=-1;targets.forEach(function(t,k){if(t&&t.getBoundingClientRect().top<innerHeight*0.35)cur=k});
+    links.forEach(function(a,k){a.classList.toggle('active',k===cur)});
+  }
+  addEventListener('scroll',onScroll,{passive:true});onScroll();
+
+  // reveals (staggered inside each group)
+  var groups=['.head','.about > *','.lab','.model','#grid .card','.pr','.job','.skill','.contact .big','.contact .cta','.facts li'];
+  var items=[];
+  groups.forEach(function(sel){[].slice.call(document.querySelectorAll(sel)).forEach(function(el,k){
+    el.classList.add('reveal');el.style.setProperty('--d',Math.min(k,6));items.push(el)})});
+  if(reduce||!('IntersectionObserver' in window)){items.forEach(function(el){el.classList.add('in')})}
+  else{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{rootMargin:'0px 0px -8% 0px',threshold:0.08});
+    items.forEach(function(el){io.observe(el)});
+  }
+
+  // count-up numbers in the strip
+  [].slice.call(document.querySelectorAll('[data-count]')).forEach(function(el){
+    var end=+el.getAttribute('data-count'),suf=el.getAttribute('data-suffix')||'';
+    if(reduce)return;
+    var t0=null;el.textContent='0'+suf;
+    function step(t){if(!t0)t0=t;var p=Math.min((t-t0)/1400,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(end*e)+suf;if(p<1)requestAnimationFrame(step)}
+    setTimeout(function(){requestAnimationFrame(step)},1100);
+  });
+
+  // card tilt + spotlight (pointer devices only)
+  if(!reduce&&matchMedia('(hover:hover)').matches){
+    [].slice.call(document.querySelectorAll('#grid .card')).forEach(function(c){
+      c.addEventListener('pointermove',function(e){
+        var r=c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+        c.style.setProperty('--mx',(x*100)+'%');c.style.setProperty('--my',(y*100)+'%');
+        c.style.setProperty('--ry',((x-.5)*6)+'deg');c.style.setProperty('--rx',((.5-y)*6)+'deg');
+      });
+      c.addEventListener('pointerleave',function(){c.style.setProperty('--rx','0deg');c.style.setProperty('--ry','0deg')});
+    });
+    [].slice.call(document.querySelectorAll('.magnet')).forEach(function(b){
+      b.addEventListener('pointermove',function(e){var r=b.getBoundingClientRect();
+        b.style.transform='translate('+((e.clientX-r.left-r.width/2)*.18)+'px,'+((e.clientY-r.top-r.height/2)*.3)+'px)'});
+      b.addEventListener('pointerleave',function(){b.style.transform=''});
+    });
+  }
+
+  // re-animate cards when a filter is chosen
+  [].slice.call(document.querySelectorAll('.chipbtn')).forEach(function(c){c.addEventListener('click',function(){
+    if(reduce)return;
+    [].slice.call(document.querySelectorAll('#grid .card:not([hidden])')).forEach(function(k,n){
+      k.classList.remove('filtering');void k.offsetWidth;k.style.animationDelay=(n*60)+'ms';k.classList.add('filtering')});
+  })});
+
+  // live oscilloscope: simulated CAN traffic scrolling left; amber bursts are
+  // spoofed frames and a box marks where the detector flags them
+  var cv=document.getElementById('scope');if(!cv)return;
+  var ctx=cv.getContext('2d'),W=0,H=150,dpr=1,col={};
+  function colors(){var cs=getComputedStyle(root);col.n=cs.getPropertyValue('--signal').trim();col.a=cs.getPropertyValue('--accent').trim();col.l=cs.getPropertyValue('--line').trim();col.m=cs.getPropertyValue('--muted').trim()}
+  function size(){dpr=Math.min(devicePixelRatio||1,2);W=cv.clientWidth;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+  colors();size();addEventListener('resize',size);
+  new MutationObserver(colors).observe(root,{attributes:true,attributeFilter:['data-theme']});
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change',colors);
+
+  var STEP=3,samples=[],t=0,attackLeft=0,nextAttack=90,seed=7;
+  function rnd(){seed=(seed*16807)%2147483647;return seed/2147483647}
+  function sample(){
+    t++;var base=H*0.56,v=base,atk=false;
+    if(attackLeft>0){attackLeft--;atk=true;v=base-(rnd()*0.62+0.18)*H*0.5*(rnd()>.5?1:-0.55)}
+    else{
+      var ph=t%26;
+      if(ph===0)v=base-H*0.22;else if(ph===1)v=base+H*0.16;else if(ph===2)v=base-H*0.08;
+      else v=base+(rnd()-.5)*3;
+      if(--nextAttack<=0){attackLeft=14+Math.floor(rnd()*10);nextAttack=110+Math.floor(rnd()*120)}
+    }
+    return {v:v,a:atk};
+  }
+  function fill(){while(samples.length<Math.ceil(W/STEP)+2)samples.push(sample())}
+  fill();
+
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    ctx.strokeStyle=col.l;ctx.lineWidth=1;ctx.globalAlpha=.6;
+    for(var gx=0;gx<W;gx+=60){ctx.beginPath();ctx.moveTo(gx+.5,0);ctx.lineTo(gx+.5,H);ctx.stroke()}
+    [H*.25,H*.56,H*.85].forEach(function(gy){ctx.beginPath();ctx.moveTo(0,gy+.5);ctx.lineTo(W,gy+.5);ctx.stroke()});
+    ctx.globalAlpha=1;
+    // flagged regions
+    var run=-1;
+    for(var k=0;k<=samples.length;k++){
+      var s=samples[k];
+      if(s&&s.a&&run<0)run=k;
+      if((!s||!s.a)&&run>=0){
+        var x0=run*STEP-6,x1=k*STEP+6;
+        ctx.fillStyle=col.a;ctx.globalAlpha=.1;ctx.fillRect(x0,6,x1-x0,H-12);
+        ctx.globalAlpha=.9;ctx.strokeStyle=col.a;ctx.setLineDash([4,4]);ctx.strokeRect(x0+.5,6.5,x1-x0,H-13);ctx.setLineDash([]);
+        ctx.fillStyle=col.a;ctx.font='600 11px "Instrument Sans",system-ui,sans-serif';ctx.fillText('spoofed frame flagged',x0+6,20);
+        ctx.globalAlpha=1;run=-1;
+      }
+    }
+    // the trace, coloured per segment
+    ctx.lineWidth=2.2;ctx.lineJoin='round';
+    for(var j=1;j<samples.length;j++){
+      ctx.strokeStyle=(samples[j].a||samples[j-1].a)?col.a:col.n;
+      ctx.beginPath();ctx.moveTo((j-1)*STEP,samples[j-1].v);ctx.lineTo(j*STEP,samples[j].v);ctx.stroke();
+    }
+    // scan head
+    var hx=(samples.length-2)*STEP;
+    ctx.fillStyle=col.n;ctx.beginPath();ctx.arc(Math.min(hx,W-4),samples[samples.length-2].v,3.5,0,7);ctx.fill();
+  }
+
+  var running=!reduce,visible=true,last=0;
+  function loop(ts){
+    if(!running||!visible||document.hidden){raf=0;return}
+    if(ts-last>=16){samples.shift();samples.push(sample());fill();draw();last=ts}
+    raf=requestAnimationFrame(loop);
+  }
+  var raf=0;
+  draw();
+  if(!reduce){
+    new IntersectionObserver(function(es){visible=es[0].isIntersecting;if(visible&&!raf)raf=requestAnimationFrame(loop)}).observe(cv);
+    document.addEventListener('visibilitychange',function(){if(!document.hidden&&!raf)raf=requestAnimationFrame(loop)});
+    raf=requestAnimationFrame(loop);
+  }
 })();
 </script>
 </body>
