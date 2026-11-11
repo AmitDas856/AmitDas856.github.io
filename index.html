@@ -243,6 +243,59 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
   .t-line{stroke-dashoffset:0}
   .cursor{display:none}
 }
+
+/* ==== Portrait stage (inspired by davidbagdasaryan.com) ==== */
+header.top{transform:translateY(-100%);transition:transform .5s cubic-bezier(.2,.8,.2,1),background-color .4s}
+header.top.solid{transform:none}
+.stage{position:relative;height:100svh;min-height:640px;overflow:hidden;background:#0c0c0c;isolation:isolate}
+.stage .portrait{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 38%;z-index:-2;
+  transform:scale(1.08);animation:breathe 18s ease-in-out infinite alternate;
+  -webkit-mask-image:linear-gradient(#000 45%,rgba(0,0,0,.85) 62%,transparent 92%);mask-image:linear-gradient(#000 45%,rgba(0,0,0,.85) 62%,transparent 92%)}
+@keyframes breathe{to{transform:scale(1.14) translateY(-1.5%)}}
+.stage::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(rgba(255,255,255,.55),rgba(255,255,255,0) 30%),radial-gradient(ellipse at 50% 120%,#0c0c0c 30%,transparent 70%)}
+.stage-top{position:relative;padding-top:26px}
+.who h1{font-size:1.45rem;letter-spacing:-.02em;line-height:1.2;color:#111;text-transform:none}
+.who p{color:#3c3c3c;font-size:1.15rem;letter-spacing:-.01em}
+.pills{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.clock{display:inline-flex;gap:12px;align-items:center;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);color:#111;border-radius:999px;padding:11px 20px;font-size:1.02rem}
+.clock span{color:#666}
+.clock b{font-weight:500;font-variant-numeric:tabular-nums;min-width:5.6ch}
+.hire{display:inline-flex;gap:12px;align-items:center;background:#111;color:#fff;border-radius:999px;padding:11px 12px 11px 20px;font-size:1.02rem;transition:transform .4s cubic-bezier(.2,.8,.2,1),background-color .3s}
+.hire:hover{transform:translateY(-2px);background:var(--accent)}
+.hire .kbd{font-size:.78rem;background:#2a2a2a;border-radius:7px;padding:4px 8px}
+.hire:hover .kbd{background:rgba(0,0,0,.25)}
+
+/* 3D ring of project previews */
+.ring-wrap{position:absolute;left:50%;top:50%;width:0;height:0;perspective:1400px;transform:translate(0,-6%)}
+.ring{position:absolute;left:0;top:0;transform-style:preserve-3d;animation:spin 34s linear infinite}
+.ring-wrap:hover .ring{animation-play-state:paused}
+@keyframes spin{from{transform:rotateX(-8deg) rotateY(0)}to{transform:rotateX(-8deg) rotateY(-360deg)}}
+.panel{--r:clamp(230px,30vw,420px);position:absolute;left:-95px;top:-62px;width:190px;height:124px;border-radius:12px;overflow:hidden;background:#141414;
+  border:1px solid rgba(255,255,255,.14);transform:rotateY(calc(var(--i)*51.43deg)) translateZ(var(--r));backface-visibility:hidden;box-shadow:0 20px 40px -20px #000;transition:border-color .3s}
+.panel:hover{border-color:var(--accent)}
+.panel .pv{position:absolute;inset:0 0 26px}
+.panel .pv svg{width:100%;height:100%}
+.panel span{position:absolute;left:0;right:0;bottom:0;height:26px;display:flex;align-items:center;padding:0 10px;font-size:.74rem;color:#f2efe8;background:#0c0c0c;border-top:1px solid rgba(255,255,255,.1)}
+
+/* dot-matrix sign */
+.dots{position:absolute;left:50%;bottom:calc(30px + 68px + 16px + 30px + 16px + 22px + 28px);transform:translateX(-50%);width:min(520px,86vw);height:52px;pointer-events:none}
+
+.stage-bottom{position:absolute;left:0;right:0;bottom:30px;display:flex;flex-direction:column;align-items:center;gap:16px;color:#f2efe8}
+.icons{display:flex;gap:8px;padding:8px;border-radius:24px;background:rgba(255,255,255,.06);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08)}
+.icons a{width:80px;height:68px;border-radius:18px;background:#0a0a0a;display:grid;place-items:center;color:#f2efe8;transition:transform .35s cubic-bezier(.2,.8,.2,1),background-color .3s}
+.icons a:hover{transform:translateY(-4px);background:var(--accent)}
+.mail{font-size:1.15rem;font-weight:500;letter-spacing:-.01em;display:inline-flex;gap:10px}
+.mail .arr{transition:transform .35s}.mail:hover .arr{transform:translate(3px,-3px)}
+.copy{color:#8c8880;font-size:.95rem}
+
+@media (max-width:860px){
+  .stage{min-height:700px}
+  .ring-wrap{transform:translate(0,-12%) scale(.62)}
+  .icons a{width:64px;height:56px}
+  .dots{height:40px;bottom:calc(30px + 56px + 16px + 30px + 16px + 22px + 24px)}
+  .ring-wrap{transform:translate(0,-18%) scale(.5)}
+}
+@media (prefers-reduced-motion:reduce){.ring{transform:rotateX(-8deg)}.stage .portrait{transform:none}}
 </style>
 </head>
 <body>
@@ -262,29 +315,44 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 </div>
 
 <main id="top">
-<section class="hero wrap" style="padding-top:96px">
-  <div class="collage">
-    <div class="tile fade d1"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="18" y="16" width="364" height="118" rx="10" class="t-panel"/>
+<section class="stage" aria-label="Introduction">
+  <img class="portrait" src="img/skyline.jpg" alt="Amit Das sitting on a railing above Sheffield city centre" width="1500" height="2000" fetchpriority="high">
+  <div class="stage-top wrap">
+    <div class="who fade d1"><h1>Amit Das</h1><p>Data science and AI, based in Sheffield &#127468;&#127463;</p></div>
+    <div class="pills fade d2">
+      <span class="clock"><span>Sheffield time</span><b id="clock">--:--:--</b></span>
+      <a class="hire" href="#contact">Hire me <span class="kbd">Open to work</span></a>
+    </div>
+  </div>
+  <div class="ring-wrap" aria-label="My projects">
+    <div class="ring"><a class="panel" href="#p-fixagent" style="--i:0"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="18" y="16" width="364" height="118" rx="10" class="t-panel"/>
 <text x="34" y="44" class="t-mono t-dim">$ python -m fixagent --repo cpp_strutil</text>
 <text x="34" y="70" class="t-mono t-bad">- return s.substr(b, e - b - 1);</text>
 <text x="34" y="92" class="t-mono t-good">+ return s.substr(b, e - b);</text>
 <rect x="34" y="106" width="0" height="12" rx="3" class="t-fill t-good-bg"><animate attributeName="width" values="0;150;150" dur="3.2s" repeatCount="indefinite"/></rect>
-<text x="194" y="116" class="t-mono t-good t-blink">tests: 3 passed</text></svg><span class="cap">FixAgent fixing a C++ bug</span></div>
-    <div class="tile fade d2"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g class="t-frames"><rect x="24" y="40" width="22" height="70" rx="3" class="t-cool"/><rect x="54" y="77" width="22" height="33" rx="3" class="t-cool"/><rect x="84" y="64" width="22" height="46" rx="3" class="t-cool"/><rect x="114" y="51" width="22" height="59" rx="3" class="t-cool"/><rect x="144" y="88" width="22" height="22" rx="3" class="t-cool"/><rect x="174" y="75" width="22" height="35" rx="3" class="t-cool"/><rect x="204" y="62" width="22" height="48" rx="3" class="t-cool"/><rect x="234" y="49" width="22" height="61" rx="3" class="t-cool"/><rect x="264" y="86" width="22" height="24" rx="3" class="t-hot"/><rect x="294" y="73" width="22" height="37" rx="3" class="t-hot"/><rect x="324" y="60" width="22" height="50" rx="3" class="t-cool"/><rect x="354" y="47" width="22" height="63" rx="3" class="t-cool"/></g>
-<rect x="250" y="22" width="70" height="106" rx="6" class="t-flag"/><text x="256" y="38" class="t-mono t-warn" font-size="11">DoS</text></svg><span class="cap">CAN bus frames, DoS flagged</span></div>
-    <div class="tile fade d3"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g class="t-print"><ellipse cx="140" cy="76" rx="12" ry="9" class="t-ring" style="animation-delay:0ms"/><ellipse cx="140" cy="76" rx="24" ry="19" class="t-ring" style="animation-delay:160ms"/><ellipse cx="140" cy="76" rx="36" ry="29" class="t-ring" style="animation-delay:320ms"/><ellipse cx="140" cy="76" rx="48" ry="39" class="t-ring" style="animation-delay:480ms"/><ellipse cx="140" cy="76" rx="60" ry="49" class="t-ring" style="animation-delay:640ms"/><ellipse cx="140" cy="76" rx="72" ry="59" class="t-ring" style="animation-delay:800ms"/></g>
+<text x="194" y="116" class="t-mono t-good t-blink">tests: 3 passed</text></svg></div><span>FixAgent</span></a><a class="panel" href="#p-autospectra" style="--i:1"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g class="t-frames"><rect x="24" y="40" width="22" height="70" rx="3" class="t-cool"/><rect x="54" y="77" width="22" height="33" rx="3" class="t-cool"/><rect x="84" y="64" width="22" height="46" rx="3" class="t-cool"/><rect x="114" y="51" width="22" height="59" rx="3" class="t-cool"/><rect x="144" y="88" width="22" height="22" rx="3" class="t-cool"/><rect x="174" y="75" width="22" height="35" rx="3" class="t-cool"/><rect x="204" y="62" width="22" height="48" rx="3" class="t-cool"/><rect x="234" y="49" width="22" height="61" rx="3" class="t-cool"/><rect x="264" y="86" width="22" height="24" rx="3" class="t-hot"/><rect x="294" y="73" width="22" height="37" rx="3" class="t-hot"/><rect x="324" y="60" width="22" height="50" rx="3" class="t-cool"/><rect x="354" y="47" width="22" height="63" rx="3" class="t-cool"/></g>
+<rect x="250" y="22" width="70" height="106" rx="6" class="t-flag"/><text x="256" y="38" class="t-mono t-warn" font-size="11">DoS</text></svg></div><span>AutoSPECTRA</span></a><a class="panel" href="#p-diss" style="--i:2"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M20 90 H90 L102 60 L116 118 L130 40 L144 96 L156 90 H210" class="t-line"/>
+<circle cx="235" cy="90" r="16" class="t-node"/><text x="225" y="95" class="t-mono" font-size="12">AI</text>
+<path d="M251 90 H300" class="t-line t-dash"/><rect x="300" y="70" width="80" height="40" rx="8" class="t-panel"/>
+<text x="309" y="95" class="t-mono t-warn" font-size="11">review?</text></svg></div><span>Agentic AI</span></a><a class="panel" href="#p-bio" style="--i:3"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g class="t-print"><ellipse cx="140" cy="76" rx="12" ry="9" class="t-ring" style="animation-delay:0ms"/><ellipse cx="140" cy="76" rx="24" ry="19" class="t-ring" style="animation-delay:160ms"/><ellipse cx="140" cy="76" rx="36" ry="29" class="t-ring" style="animation-delay:320ms"/><ellipse cx="140" cy="76" rx="48" ry="39" class="t-ring" style="animation-delay:480ms"/><ellipse cx="140" cy="76" rx="60" ry="49" class="t-ring" style="animation-delay:640ms"/><ellipse cx="140" cy="76" rx="72" ry="59" class="t-ring" style="animation-delay:800ms"/></g>
 <g class="t-mods"><text x="250" y="45" class="t-mono">face</text><text x="250" y="65" class="t-mono">finger</text><text x="250" y="85" class="t-mono">iris</text><text x="250" y="105" class="t-mono">ear</text><text x="250" y="125" class="t-mono">palm</text></g>
-<path d="M318 40 L345 75 L318 120 M345 75 H380" class="t-line"/></svg><span class="cap">Five biometric traits, one CNN</span></div>
+<path d="M318 40 L345 75 L318 120 M345 75 H380" class="t-line"/></svg></div><span>Biometrics</span></a><a class="panel" href="#p-ppqc" style="--i:4"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g style="animation-delay:0ms" class="t-block"><rect x="20" y="45" width="88" height="60" rx="8" class="t-panel"/><text x="32" y="72" class="t-mono t-dim" font-size="11">block 1</text><text x="32" y="92" class="t-mono t-good" font-size="11">0x9f3a</text></g><g style="animation-delay:400ms" class="t-block"><rect x="140" y="45" width="88" height="60" rx="8" class="t-panel"/><text x="152" y="72" class="t-mono t-dim" font-size="11">block 2</text><text x="152" y="92" class="t-mono t-good" font-size="11">0xc41e</text></g><g style="animation-delay:800ms" class="t-block"><rect x="260" y="45" width="88" height="60" rx="8" class="t-panel"/><text x="272" y="72" class="t-mono t-dim" font-size="11">block 3</text><text x="272" y="92" class="t-mono t-good" font-size="11">0x7b02</text></g><path d="M108 75 H140 M228 75 H260" class="t-line"/>
+<text x="40" y="132" class="t-mono t-dim" font-size="11">encrypted reports, scored, stored on chain</text></svg></div><span>PPQC</span></a><a class="panel" href="#p-health" style="--i:5"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="34" y="94" width="34" height="34" rx="4" class="t-bar" style="animation-delay:0ms"/><rect x="92" y="76" width="34" height="52" rx="4" class="t-bar" style="animation-delay:120ms"/><rect x="150" y="62" width="34" height="66" rx="4" class="t-bar" style="animation-delay:240ms"/><rect x="208" y="40" width="34" height="88" rx="4" class="t-bar" style="animation-delay:360ms"/><rect x="266" y="24" width="34" height="104" rx="4" class="t-bar" style="animation-delay:480ms"/><rect x="324" y="32" width="34" height="96" rx="4" class="t-bar" style="animation-delay:600ms"/><path d="M20 128 H380" class="t-axis"/></svg></div><span>Stroke risk</span></a><a class="panel" href="#p-react" style="--i:6"><div class="pv"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="40" y="18" width="320" height="114" rx="10" class="t-panel"/><circle cx="58" cy="34" r="4" class="t-dot"/><circle cx="72" cy="34" r="4" class="t-dot"/><circle cx="86" cy="34" r="4" class="t-dot"/>
+<rect x="60" y="54" width="150" height="14" rx="4" class="t-fill t-good-bg"/><rect x="60" y="76" width="210" height="8" rx="4" class="t-fill"/><rect x="60" y="92" width="180" height="8" rx="4" class="t-fill"/>
+<g class="t-spin" transform="translate(310 86)"><ellipse rx="26" ry="10" class="t-ring2"/><ellipse rx="26" ry="10" transform="rotate(60)" class="t-ring2"/><ellipse rx="26" ry="10" transform="rotate(120)" class="t-ring2"/><circle r="4" class="t-node"/></g></svg></div><span>React site</span></a></div>
   </div>
-  <p class="tag hello fade d1">(HELLO, I'M AMIT)</p>
-  <div class="hero-row">
-    <h1 aria-label="Machine learning developer"><span class="ln"><span>Machine <span class="it">learning</span></span></span><span class="ln"><span>Developer</span></span></h1>
-    <div class="hero-side fade d2">
-      <p>MSc Data Science and AI student in Sheffield. I build machine-learning systems for security and healthcare data, then test them hard: time-ordered splits, leakage checks and honest baselines.</p>
-      <a class="pill" href="#contact">Let's talk <span class="arr">&#8599;</span></a>
+  <canvas id="dots" class="dots" aria-hidden="true"></canvas>
+  <div class="stage-bottom">
+    <div class="icons fade d3">
+      <a href="https://github.com/AmitDas856" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" width="26" height="26" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.6 22.4c.6.1.8-.3.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.6-.3-5.3-1.3-5.3-5.7 0-1.3.5-2.3 1.2-3.1-.1-.3-.5-1.5.1-3.1 0 0 1-.3 3.2 1.2a11 11 0 0 1 5.8 0c2.2-1.5 3.2-1.2 3.2-1.2.6 1.6.2 2.8.1 3.1.8.8 1.2 1.8 1.2 3.1 0 4.4-2.7 5.4-5.3 5.7.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+      <a href="https://www.linkedin.com/in/amit-das-724b7243b" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.5c0-1.3 0-3-1.8-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg></a>
+      <a href="#work" aria-label="My work"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg></a>
     </div>
+    <a class="mail fade d3" href="https://github.com/AmitDas856" target="_blank" rel="noopener">github.com/AmitDas856 <span class="arr">&#8599;</span></a>
+    <p class="copy fade d3">Scroll for my work</p>
   </div>
-
+</section>
+<section class="hero wrap" style="padding-top:120px">
   <div class="intro" id="about">
     <div><p class="rv">I'm open to entry-level data science, machine learning and software roles in the UK. My MSc at Sheffield Hallam runs to January 2027, after a B.Tech in Computer Science and Engineering (Data Science) in Hyderabad.</p>
       <a class="pill rv" style="margin-top:22px;--d:1" href="https://github.com/AmitDas856" target="_blank" rel="noopener">github.com/AmitDas856 <span class="arr">&#8599;</span></a></div>
@@ -442,7 +510,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
   // header + active link
   var top=document.querySelector('header.top'),links=[].slice.call(document.querySelectorAll('.nav a'));
-  function onScroll(){top.classList.toggle('solid',scrollY>40);
+  function onScroll(){top.classList.toggle('solid',scrollY>innerHeight*.85);
     var cur=null,best=-1e9;links.forEach(function(a){var t=document.querySelector(a.getAttribute('href'));if(!t)return;var y=t.getBoundingClientRect().top;if(y<innerHeight*.4&&y>best){best=y;cur=a}});
     links.forEach(function(a){a.classList.toggle('active',a===cur)})}
   addEventListener('scroll',onScroll,{passive:true});onScroll();
@@ -478,6 +546,29 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
       tiles.forEach(function(t,i){var k=(i+1)*6;t.style.translate=(dx*k)+'px '+(dy*k)+'px'})});
   }
 
+
+  // live Sheffield clock
+  var ck=document.getElementById('clock');
+  function tick(){try{ck.textContent=new Date().toLocaleTimeString('en-GB',{timeZone:'Europe/London',hour12:false})}catch(e){ck.textContent=new Date().toTimeString().slice(0,8)}}
+  tick();setInterval(tick,1000);
+
+  // dot-matrix sign scrolling a message
+  var dc=document.getElementById('dots');
+  if(dc){
+    var dx=dc.getContext('2d'),DW,DH,cols,rows=7,cell,off=0,msg='  OPEN TO WORK  *  DATA SCIENCE  *  MACHINE LEARNING  *  AI AGENTS  ';
+    var F={A:'01110100011000111111100011000110001',B:'11110100011111010001100011000111110',C:'01110100011000010000100001000101110',D:'11110100011000110001100011000111110',E:'11111100001111010000100001000011111',F:'11111100001111010000100001000010000',G:'01110100011000010111100011000101111',H:'10001100011111110001100011000110001',I:'01110001000010000100001000010001110',K:'10001100101010011000101001001010001',L:'10000100001000010000100001000011111',M:'10001110111010110001100011000110001',N:'10001110011010110011100011000110001',O:'01110100011000110001100011000101110',P:'11110100011111010000100001000010000',R:'11110100011111010100100101000110001',S:'01111100000111000001000011000111110',T:'11111001000010000100001000010000100',W:'10001100011000110101101011101110001',Y:'10001100010101000100001000010000100',' ':'00000000000000000000000000000000000','*':'00000001001010100100010101001000000'};
+    var bits=[];msg.split('').forEach(function(c){var g=F[c]||F[' '];for(var x=0;x<5;x++){var col=[];for(var y=0;y<7;y++)col.push(g[y*5+x]==='1');bits.push(col)}bits.push([0,0,0,0,0,0,0])});
+    function dsize(){var r=Math.min(devicePixelRatio||1,2);DW=dc.clientWidth;DH=dc.clientHeight;dc.width=DW*r;dc.height=DH*r;dx.setTransform(r,0,0,r,0,0);cell=DH/rows;cols=Math.ceil(DW/cell)}
+    dsize();addEventListener('resize',dsize);
+    function ddraw(){dx.clearRect(0,0,DW,DH);
+      for(var c=0;c<cols;c++){var col=bits[(Math.floor(off)+c)%bits.length];
+        for(var y=0;y<rows;y++){var on=col[y];dx.beginPath();dx.arc(c*cell+cell/2,y*cell+cell/2,cell*.34,0,7);
+          dx.fillStyle=on?'rgba(255,255,255,.95)':'rgba(255,255,255,.07)';if(on){dx.shadowColor='rgba(255,255,255,.8)';dx.shadowBlur=8}else dx.shadowBlur=0;dx.fill()}}}
+    var lastD=0;function dloop(ts){if(ts-lastD>70){off+=1;ddraw();lastD=ts}requestAnimationFrame(dloop)}
+    ddraw();if(!reduce)requestAnimationFrame(dloop);
+  }
+  // ring panels open their project row
+  [].slice.call(document.querySelectorAll('.panel')).forEach(function(p){p.addEventListener('click',function(){var d=document.querySelector(p.getAttribute('href'));if(d)d.open=true})});
   // evaluation demo
   var rate=document.getElementById('rate');
   function pct(v){return (v*100).toFixed(1)+'%'}
