@@ -278,6 +278,47 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
 
 @media (max-width:820px){.hero{min-height:auto;padding-top:40px}.hero h1{white-space:normal;font-size:clamp(3.6rem,19vw,6rem)}.hero .scope canvas{height:130px}}
 @media (prefers-reduced-motion:reduce){#intro{display:none}.marquee .track{animation:none;flex-wrap:wrap;width:auto}}
+
+/* ---- Project previews and glass styling (Pinterest-inspired) */
+.thumb{margin:-22px -22px 4px;height:150px;border-radius:14px 14px 0 0;overflow:hidden;background:#06101f;position:relative;border-bottom:1px solid var(--line)}
+.thumb::after{content:"";position:absolute;inset:0;background:radial-gradient(300px circle at var(--mx,50%) var(--my,0%),rgba(0,184,169,.18),transparent 60%);pointer-events:none}
+.thumb svg{width:100%;height:100%;display:block}
+.thumb .t-panel{fill:#0d1b33;stroke:#1c2d4d}
+.thumb .t-mono{font-family:var(--mono);font-size:13px;fill:#cfe0f5}
+.thumb .t-dim{fill:#7f93b5}.thumb .t-bad{fill:#ff8a80}.thumb .t-good{fill:#3ee0cf}.thumb .t-warn{fill:#ffb03b}
+.thumb .t-fill{fill:#1c2d4d}.thumb .t-good-bg{fill:#00b8a9}
+.thumb .t-line{fill:none;stroke:#00b8a9;stroke-width:2.5;stroke-linejoin:round;stroke-linecap:round;stroke-dasharray:600;stroke-dashoffset:600;animation:tDraw 3.5s ease-in-out infinite}
+.thumb .t-dash{stroke-dasharray:6 6;animation:tMarch 1s linear infinite}
+.thumb .t-node{fill:#0d1b33;stroke:#00b8a9;stroke-width:2}
+.thumb .t-cool{fill:#1f4f6b}.thumb .t-hot{fill:#ffb03b;animation:tPulse 1.4s ease-in-out infinite}
+.thumb .t-flag{fill:rgba(255,176,59,.08);stroke:#ffb03b;stroke-dasharray:4 4}
+.thumb .t-ring{fill:none;stroke:#00b8a9;stroke-width:1.6;opacity:.25;animation:tScan 2.4s ease-in-out infinite}
+.thumb .t-block{animation:tPulse 2.4s ease-in-out infinite}
+.thumb .t-bar{fill:#00b8a9;transform-box:fill-box;transform-origin:bottom;animation:tGrow 3s cubic-bezier(.2,.75,.2,1) infinite}
+.thumb .t-bar:nth-of-type(5),.thumb .t-bar:nth-of-type(6){fill:#ffb03b}
+.thumb .t-axis{stroke:#1c2d4d;stroke-width:2}
+.thumb .t-dot{fill:#1c2d4d}
+.thumb .t-ring2{fill:none;stroke:#3ee0cf;stroke-width:1.8}
+.thumb .t-spin{animation:tSpin 9s linear infinite;transform-box:view-box}
+.thumb .t-blink{animation:tBlink 3.2s steps(1) infinite}
+@keyframes tDraw{0%{stroke-dashoffset:600}50%,100%{stroke-dashoffset:0}}
+@keyframes tMarch{to{stroke-dashoffset:-12}}
+@keyframes tPulse{50%{opacity:.45}}
+@keyframes tScan{0%,100%{opacity:.18}50%{opacity:.9}}
+@keyframes tGrow{0%{transform:scaleY(.05)}45%,100%{transform:scaleY(1)}}
+@keyframes tSpin{to{transform:translate(310px,86px) rotate(360deg)}}
+@keyframes tBlink{0%,45%{opacity:0}46%,100%{opacity:1}}
+:root[data-theme="dark"] .card{background:rgba(18,31,56,.72);backdrop-filter:blur(10px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .card{background:rgba(18,31,56,.72);backdrop-filter:blur(10px)}}
+
+/* contact: a glowing panel to finish */
+.contact .wrap{position:relative;border-radius:22px;padding:clamp(28px,5vw,56px);background:#06101f;color:#eef3fb;overflow:hidden;isolation:isolate}
+.contact .wrap::before{content:"";position:absolute;inset:0;z-index:-1;background:radial-gradient(500px circle at 85% 20%,rgba(0,184,169,.25),transparent 60%),radial-gradient(400px circle at 10% 100%,rgba(255,176,59,.14),transparent 60%)}
+.contact .eyebrow{color:#3ee0cf}
+.contact .btn:not(.primary){border-color:#eef3fb;color:#eef3fb}
+.contact .btn:not(.primary):hover{background:#eef3fb;color:#06101f}
+section.contact{border-top:0}
+@media (prefers-reduced-motion:reduce){.thumb *{animation:none!important;stroke-dashoffset:0!important}}
 </style>
 
 </head>
@@ -377,6 +418,12 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
   </div>
   <div class="grid" id="grid">
     <article class="card" data-c="ml web">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="18" y="16" width="364" height="118" rx="10" class="t-panel"/>
+<text x="34" y="44" class="t-mono t-dim">$ python -m fixagent --repo cpp_strutil</text>
+<text x="34" y="70" class="t-mono t-bad">- return s.substr(b, e - b - 1);</text>
+<text x="34" y="92" class="t-mono t-good">+ return s.substr(b, e - b);</text>
+<rect x="34" y="106" width="0" height="12" rx="3" class="t-fill t-good-bg"><animate attributeName="width" values="0;150;150" dur="3.2s" repeatCount="indefinite"/></rect>
+<text x="194" y="116" class="t-mono t-good t-blink">tests: 3 passed</text></svg></div>
       <div class="top"><span class="status live">Public repo</span><span class="year">2026 · Personal project</span></div>
       <h3>FixAgent: an AI agent that fixes bugs</h3>
       <p>Give it a repository and a bug report or GitHub issue. It explores the code, runs the tests, edits the source and hands back a patch or pull request. A fix only counts if the tests fail before and pass after. Works on Python, C++ and Rust code, with a React dashboard to watch it work.</p>
@@ -389,6 +436,8 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
       <a class="repo" href="https://github.com/AmitDas856/fixagent" target="_blank" rel="noopener">View on GitHub</a>
     </article>
     <article class="card" data-c="ml security">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g class="t-frames"><rect x="24" y="40" width="22" height="70" rx="3" class="t-cool"/><rect x="54" y="77" width="22" height="33" rx="3" class="t-cool"/><rect x="84" y="64" width="22" height="46" rx="3" class="t-cool"/><rect x="114" y="51" width="22" height="59" rx="3" class="t-cool"/><rect x="144" y="88" width="22" height="22" rx="3" class="t-cool"/><rect x="174" y="75" width="22" height="35" rx="3" class="t-cool"/><rect x="204" y="62" width="22" height="48" rx="3" class="t-cool"/><rect x="234" y="49" width="22" height="61" rx="3" class="t-cool"/><rect x="264" y="86" width="22" height="24" rx="3" class="t-hot"/><rect x="294" y="73" width="22" height="37" rx="3" class="t-hot"/><rect x="324" y="60" width="22" height="50" rx="3" class="t-cool"/><rect x="354" y="47" width="22" height="63" rx="3" class="t-cool"/></g>
+<rect x="250" y="22" width="70" height="106" rx="6" class="t-flag"/><text x="256" y="38" class="t-mono t-warn" font-size="11">DoS</text></svg></div>
       <div class="top"><span class="status live">Public repo</span><span class="year">2026 · MSc group project</span></div>
       <h3>AutoSPECTRA: CAN bus intrusion detection</h3>
       <p>Deep learning to detect DoS, fuzzing, gear and RPM spoofing attacks on a vehicle CAN bus, using the public HCRL Car-Hacking dataset, with automated incident reporting.</p>
@@ -401,6 +450,10 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
       <a class="repo" href="https://github.com/AmitDas856/AutoSPECTRA-Project" target="_blank" rel="noopener">View on GitHub</a>
     </article>
     <article class="card" data-c="ml health">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M20 90 H90 L102 60 L116 118 L130 40 L144 96 L156 90 H210" class="t-line"/>
+<circle cx="235" cy="90" r="16" class="t-node"/><text x="225" y="95" class="t-mono" font-size="12">AI</text>
+<path d="M251 90 H300" class="t-line t-dash"/><rect x="300" y="70" width="80" height="40" rx="8" class="t-panel"/>
+<text x="309" y="95" class="t-mono t-warn" font-size="11">review?</text></svg></div>
       <div class="top"><span class="status plan">Planned</span><span class="year">2026 · MSc dissertation</span></div>
       <h3>Agentic AI for IoT-enabled healthcare</h3>
       <p>An agentic workflow for patient monitoring that checks the quality of incoming vital-sign data, calls a triage prediction model and flags uncertain cases for clinical review. At the planning stage now.</p>
@@ -411,6 +464,9 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
       <div class="tags"><span>Agentic AI</span><span>Scikit-learn</span><span>Python</span></div>
     </article>
     <article class="card" data-c="ml security">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g class="t-print"><ellipse cx="140" cy="76" rx="12" ry="9" class="t-ring" style="animation-delay:0ms"/><ellipse cx="140" cy="76" rx="24" ry="19" class="t-ring" style="animation-delay:160ms"/><ellipse cx="140" cy="76" rx="36" ry="29" class="t-ring" style="animation-delay:320ms"/><ellipse cx="140" cy="76" rx="48" ry="39" class="t-ring" style="animation-delay:480ms"/><ellipse cx="140" cy="76" rx="60" ry="49" class="t-ring" style="animation-delay:640ms"/><ellipse cx="140" cy="76" rx="72" ry="59" class="t-ring" style="animation-delay:800ms"/></g>
+<g class="t-mods"><text x="250" y="45" class="t-mono">face</text><text x="250" y="65" class="t-mono">finger</text><text x="250" y="85" class="t-mono">iris</text><text x="250" y="105" class="t-mono">ear</text><text x="250" y="125" class="t-mono">palm</text></g>
+<path d="M318 40 L345 75 L318 120 M345 75 H380" class="t-line"/></svg></div>
       <div class="top"><span class="status live">Public repo</span><span class="year">2025 · Final-year project, team lead</span></div>
       <h3>Multimodal biometric recognition</h3>
       <p>A desktop authentication app that fuses face, fingerprint, iris, ear and palm features, with Gabor-filter feature extraction and a CNN classifier. Reported accuracy above 95%.</p>
@@ -422,6 +478,8 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
       <a class="repo" href="https://github.com/AmitDas856/multimodal-biometric-recognition" target="_blank" rel="noopener">View on GitHub</a>
     </article>
     <article class="card" data-c="security">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><g style="animation-delay:0ms" class="t-block"><rect x="20" y="45" width="88" height="60" rx="8" class="t-panel"/><text x="32" y="72" class="t-mono t-dim" font-size="11">block 1</text><text x="32" y="92" class="t-mono t-good" font-size="11">0x9f3a</text></g><g style="animation-delay:400ms" class="t-block"><rect x="140" y="45" width="88" height="60" rx="8" class="t-panel"/><text x="152" y="72" class="t-mono t-dim" font-size="11">block 2</text><text x="152" y="92" class="t-mono t-good" font-size="11">0xc41e</text></g><g style="animation-delay:800ms" class="t-block"><rect x="260" y="45" width="88" height="60" rx="8" class="t-panel"/><text x="272" y="72" class="t-mono t-dim" font-size="11">block 3</text><text x="272" y="92" class="t-mono t-good" font-size="11">0x7b02</text></g><path d="M108 75 H140 M228 75 H260" class="t-line"/>
+<text x="40" y="132" class="t-mono t-dim" font-size="11">encrypted reports, scored, stored on chain</text></svg></div>
       <div class="top"><span class="status live">Public repo</span><span class="year">2025 · Team project</span></div>
       <h3>PPQC: privacy-preserving quality control</h3>
       <p>A simulation of a mobile crowd-sensing network. Participants report encrypted locations, a quality check scores each report and rewards participants, and results are recorded through a Solidity smart contract on a local Ethereum chain.</p>
@@ -432,6 +490,7 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
       <a class="repo" href="https://github.com/AmitDas856/ppqc-crowdsensing" target="_blank" rel="noopener">View on GitHub</a>
     </article>
     <article class="card" data-c="health ml">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="34" y="94" width="34" height="34" rx="4" class="t-bar" style="animation-delay:0ms"/><rect x="92" y="76" width="34" height="52" rx="4" class="t-bar" style="animation-delay:120ms"/><rect x="150" y="62" width="34" height="66" rx="4" class="t-bar" style="animation-delay:240ms"/><rect x="208" y="40" width="34" height="88" rx="4" class="t-bar" style="animation-delay:360ms"/><rect x="266" y="24" width="34" height="104" rx="4" class="t-bar" style="animation-delay:480ms"/><rect x="324" y="32" width="34" height="96" rx="4" class="t-bar" style="animation-delay:600ms"/><path d="M20 128 H380" class="t-axis"/></svg></div>
       <div class="top"><span class="status">Private repos</span><span class="year">2026 · Coursework</span></div>
       <h3>Patient health analytics: stroke risk</h3>
       <p>An end-to-end analysis in R of how hypertension, glucose and BMI relate to stroke, with tidyverse cleaning, ggplot2 charts and a written report. A matching Python app answers 12 analytical queries with hand-written statistics.</p>
@@ -439,6 +498,9 @@ nav.on-hero .theme{background:transparent;color:#eef3fb;border-color:#1c2d4d}
       <p>Coursework, so the code is private. Available on request.</p>
     </article>
     <article class="card" data-c="web">
+      <div class="thumb"><svg viewBox="0 0 400 150" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><rect x="40" y="18" width="320" height="114" rx="10" class="t-panel"/><circle cx="58" cy="34" r="4" class="t-dot"/><circle cx="72" cy="34" r="4" class="t-dot"/><circle cx="86" cy="34" r="4" class="t-dot"/>
+<rect x="60" y="54" width="150" height="14" rx="4" class="t-fill t-good-bg"/><rect x="60" y="76" width="210" height="8" rx="4" class="t-fill"/><rect x="60" y="92" width="180" height="8" rx="4" class="t-fill"/>
+<g class="t-spin" transform="translate(310 86)"><ellipse rx="26" ry="10" class="t-ring2"/><ellipse rx="26" ry="10" transform="rotate(60)" class="t-ring2"/><ellipse rx="26" ry="10" transform="rotate(120)" class="t-ring2"/><circle r="4" class="t-node"/></g></svg></div>
       <div class="top"><span class="status live">Public repo</span><span class="year">2025</span></div>
       <h3>Portfolio site, React edition</h3>
       <p>My earlier portfolio, built with React 19, Vite and Tailwind CSS. This page is the plain HTML rewrite: no build step, fast to load, works on a phone.</p>
